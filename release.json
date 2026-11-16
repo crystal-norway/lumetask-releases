@@ -1,0 +1,24 @@
+{
+  "schema": 1,
+  "version": "1.9.0",
+  "versionCode": 13,
+  "publishedAt": "2026-11-16",
+  "channel": "public-preview",
+  "packageName": "com.lumetask.app",
+  "minAndroid": "8.0",
+  "filename": "LumeTask-1.9.0.apk",
+  "path": "/downloads/LumeTask-1.9.0.apk",
+  "size": 11974645,
+  "sha256": "669c0a1090f7f2ea376b95b1b75f95099703c0b2c801c3a9a3ddbf75b53059de",
+  "certificateSha256": "752f87d6a349c62645d0e8321c568d67ba10964fd5f8fc18eb3ca7feedc39249",
+  "notes": [
+    "���񡢼�ʱ��ϰ�߹�����֧�ֱ��ؼ�¼�Ͷ��ͬ����",
+    "������֤���� GitHub ��¼�����˺��ɹ���Ա��ˡ�",
+    "�����״����ܡ������¼���޸��������֤�����á�",
+    "�˺ű������ݸ��룬�˳�������ͬ�����С�"
+  ],
+  "github": {
+    "page": "https://github.com/crystal-norway/lumetask-releases/releases/tag/v1.9.0",
+    "download": "https://github.com/crystal-norway/lumetask-releases/releases/download/v1.9.0/LumeTask-1.9.0.apk"
+  }
+}

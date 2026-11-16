@@ -1,2 +1,7 @@
-# lumetask-releases
-LumeTask Android releases. Download: https://lume-task.pages.dev/download/
+# LumeTask Android ����
+
+�����밲װ˵����https://lume-task.pages.dev/download/
+
+���ֿ���ַ�ǩ�� APK��У���ļ��͸���˵����������Ӧ��Դ�롣��ǰΪ�����ڲ⣬ע�����Ҫ����Ա��ˡ�
+
+�ɵ��԰�����ʽ��ǩ����ͬ��Ǩ��ǰ����ȷ��ͬ����ɡ�
