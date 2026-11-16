@@ -23,6 +23,7 @@ jobs:
           async function api(route,options={}) {
             const response=await fetch('https://api.github.com'+route,{...options,headers:{...headers,...options.headers}});
             if(!response.ok)throw new Error(`GitHub operation failed (${response.status})`);
+            if(response.status===204)return null;
             return response.json();
           }
           const content=await api(`/repos/${repo}/contents/release.json?ref=${sha}`);
@@ -35,27 +36,32 @@ jobs:
           const bytes=Buffer.from(await response.arrayBuffer());
           if(bytes.length!==release.size||createHash('sha256').update(bytes).digest('hex')!==release.sha256)throw new Error('APK verification failed');
           const tag=`v${release.version}`,releases=await api(`/repos/${repo}/releases?per_page=100`);
+          const title=`LumeTask ${release.version} · 公开内测`;
+          const body=release.notes.map(note=>'- '+note).join('\n')+`\n\n下载与安装说明：https://lume-task.pages.dev/download/\n\nSHA-256: ${release.sha256}\n\n本仓库仅分发安装包和发布说明。`;
           let published=releases.find(item=>item.tag_name===tag);
           if(published&&!published.draft) {
             const asset=published.assets.find(item=>item.name===release.filename);
             if(asset?.size!==release.size||asset?.digest!==`sha256:${release.sha256}`)throw new Error('Published version differs; never overwrite it');
-            console.log(published.html_url);process.exit(0);
           }
           if(!published)published=await api(`/repos/${repo}/releases`,{method:'POST',body:JSON.stringify({tag_name:tag,target_commitish:sha,
-            name:`LumeTask ${release.version} �� �����ڲ�`,draft:true,prerelease:true,
-            body:release.notes.map(note=>'- '+note).join('\n')+`\n\n�����밲װ˵����https://lume-task.pages.dev/download/\n\nSHA-256: ${release.sha256}\n\n���ֿ���ַ���װ���ͷ���˵����`})});
+            name:title,draft:true,prerelease:true,body})});
           const checksum=Buffer.from(`${release.sha256}  ${release.filename}\n`);
           const metadata=Buffer.from(JSON.stringify(release,null,2)+'\n');
           for(const [name,data,type] of [[release.filename,bytes,'application/vnd.android.package-archive'],['SHA256SUMS.txt',checksum,'text/plain'],['release.json',metadata,'application/json']]) {
             const digest=`sha256:${createHash('sha256').update(data).digest('hex')}`;
             const existing=published.assets.find(asset=>asset.name===name);
-            if(existing){if(existing.size!==data.length||existing.digest!==digest)throw new Error('Draft asset differs; inspect it before retrying');continue;}
+            if(existing){
+              if(existing.size===data.length&&existing.digest===digest)continue;
+              // Only descriptive metadata can be refreshed; APK and checksum remain immutable.
+              if(name!=='release.json')throw new Error('Release asset differs; inspect it before retrying');
+              await api(`/repos/${repo}/releases/assets/${existing.id}`,{method:'DELETE'});
+            }
             const upload=await fetch(`https://uploads.github.com/repos/${repo}/releases/${published.id}/assets?name=${encodeURIComponent(name)}`,
               {method:'POST',headers:{...headers,'Content-Type':type},body:data});
             if(!upload.ok)throw new Error(`Asset upload failed (${upload.status})`);
             const asset=await upload.json();
             if(asset.size!==data.length||(asset.digest&&asset.digest!==digest))throw new Error('Uploaded asset verification failed');
           }
-          published=await api(`/repos/${repo}/releases/${published.id}`,{method:'PATCH',body:JSON.stringify({draft:false})});
+          published=await api(`/repos/${repo}/releases/${published.id}`,{method:'PATCH',body:JSON.stringify({name:title,body,draft:false})});
           console.log(published.html_url);
           NODE

@@ -1,7 +1,7 @@
-# LumeTask Android ����
+# LumeTask Android releases
 
-�����밲װ˵����https://lume-task.pages.dev/download/
+Downloads and installation: https://lume-task.pages.dev/download/
 
-���ֿ���ַ�ǩ�� APK��У���ļ��͸���˵����������Ӧ��Դ�롣��ǰΪ�����ڲ⣬ע�����Ҫ����Ա��ˡ�
+This repository distributes signed APKs, checksums and release notes only. Application source code is not included. New accounts require administrator approval during the public preview.
 
-�ɵ��԰�����ʽ��ǩ����ͬ��Ǩ��ǰ����ȷ��ͬ����ɡ�
+Debug and release builds use different signing certificates. Sync all data before migrating.
